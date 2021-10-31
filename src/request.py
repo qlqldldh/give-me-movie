@@ -1,4 +1,3 @@
-from typing import Union
 import requests
 import json
 
@@ -17,7 +16,7 @@ class APIRequest:
         query: str,
         display: int = None,
         start: int = None,
-        genre: Union[str, int] = None,
+        genre: str = None,
         country: str = None,
         year_from: int = None,
         year_to: int = None,
@@ -30,9 +29,9 @@ class APIRequest:
             raise ValueError(
                 "Invalid 'start' value. 'start' should be integer and in range of 1 to 1000"
             )
-        if genre and not Genre.is_valid_value(int(genre)):
+        if genre and genre not in Genre.member_names():
             raise ValueError(
-                f"Invalid 'genre' value. 'genre' should be integer and in range of 1 to {len(Genre.member_names())}"
+                f"Invalid 'genre' value"
             )
         if country and country not in Country.member_names():
             raise ValueError("Invalid 'country' value.")
@@ -45,7 +44,7 @@ class APIRequest:
         self.query = query
         self.display = display
         self.start = start
-        self.genre = None if not genre else Genre(genre)
+        self.genre = None if not genre else Genre[genre].value
         self.country = None if not country else Country(country)
         self.yearfrom = year_from  # noqa
         self.yearto = year_to  # noqa

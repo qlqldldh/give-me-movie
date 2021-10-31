@@ -7,8 +7,9 @@ class EnumClass(Enum):
         return cls.__dict__.get("_member_names_")
 
     @classmethod
-    def is_valid_value(cls, value: int) -> bool:
-        return 0 < value < len(cls.member_names())
+    def is_valid_value(cls, value: str) -> bool:
+        if isinstance(value, str):
+            return value in cls.member_names()
 
 
 class Genre(EnumClass):
