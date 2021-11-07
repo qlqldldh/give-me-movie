@@ -1,3 +1,4 @@
+from markdown import markdown
 from typing import Union
 
 from typer import echo, style
@@ -42,22 +43,24 @@ class Item:
 
     @property
     def markdown_text(self):
-        return f"""
-        # {self.title}
+        return markdown(
+            f"""
+# {self.title}
         
-        > link: {self.link}
+> link: {self.link}
         
-        > published: {self.pub_date}
+> published: {self.pub_date}
         
-        <p align="center">
-            <img width="330" height="471" src="{self.image}"><br>
-            {self.subtitle}
-        </p>
+<p align="center">
+    <img width="330" height="471" src="{self.image}"><br>
+    {self.subtitle}
+</p>
         
-        - Director: {self.director}
+- Director: {self.director}
         
-        - Actors: {self.actor}
+- Actors: {self.actor}
         
-        - User Rating: {self.user_rating}
+- User Rating: {self.user_rating}
         
         """
+        )
