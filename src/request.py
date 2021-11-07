@@ -3,7 +3,7 @@ import json
 
 from src.settings import NV_URL, NV_CLIENT_ID, NV_CLIENT_SECRET
 from src.enums import Genre, Country, HttpStatus
-from src.utils import is_none_or_type, dict_without_none
+from src.utils.field import is_none_or_type, dict_without_none
 
 
 class APIRequest:
@@ -30,9 +30,7 @@ class APIRequest:
                 "Invalid 'start' value. 'start' should be integer and in range of 1 to 1000"
             )
         if genre and genre not in Genre.member_names():
-            raise ValueError(
-                f"Invalid 'genre' value"
-            )
+            raise ValueError(f"Invalid 'genre' value")
         if country and country not in Country.member_names():
             raise ValueError("Invalid 'country' value.")
 

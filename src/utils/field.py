@@ -1,6 +1,5 @@
-import re
-import typer
 from typing import Any
+import re
 
 
 def is_none_or_type(target: Any, type_: Any) -> bool:
@@ -20,9 +19,9 @@ def dict_without_none(obj: dict) -> dict:
     return {key: value for key, value in obj.items() if value}
 
 
-def err_echo(e: str) -> None:
-    typer.echo(typer.style(e, fg=typer.colors.RED))
-
-
 def remove_bold_exp(s: str):  # 망할 네이버..
     return re.sub("(<b>|</b>)", "", s)
+
+
+def replace_to_comma(s: str) -> str:  # 망할 네이버..
+    return s.replace("|", ",")[:-1]

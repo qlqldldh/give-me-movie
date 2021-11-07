@@ -13,18 +13,18 @@ class EnumClass(Enum):
 
 
 class Genre(EnumClass):
-    DRAMA = auto()
-    FANTASY = auto()
-    WESTERN = auto()
-    HORROR = auto()
-    ROMANCE = auto()
-    ADVENTURE = auto()
-    THRILLER = auto()
-    NOIR = auto()
-    CULT = auto()
-    DOCUMENTARY = auto()
-    COMEDY = auto()
-    FAMILY = auto()
+    DRAMA = 1
+    FANTASY = 2
+    WESTERN = 3
+    HORROR = 4
+    ROMANCE = 5
+    ADVENTURE = 6
+    THRILLER = 7
+    NOIR = 8
+    CULT = 9
+    DOCUMENTARY = 10
+    COMEDY = 11
+    FAMILY = 12
 
 
 class Country(EnumClass):

@@ -1,4 +1,4 @@
-from src.utils import dict_fields_to_snake_case
+from src.utils.field import dict_fields_to_snake_case
 from src.item import Item
 
 

@@ -1,7 +1,7 @@
 from github import Github
 
 from src.settings import GITHUB_ACCESS_TOKEN, GITHUB_REPO
-from src.utils import dict_without_none
+from src.utils.field import dict_without_none
 
 
 class GithubRepo:
