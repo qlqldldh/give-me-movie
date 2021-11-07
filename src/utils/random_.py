@@ -19,4 +19,4 @@ def rand_hex():
 
 
 def rand_color():
-    return f"#{rand_hex()}{rand_hex()}{rand_hex()}"
+    return f"{rand_hex()}{rand_hex()}{rand_hex()}"
