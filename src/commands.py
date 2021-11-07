@@ -1,26 +1,15 @@
 from typing import Union
-import random
-import string
 
-from typer import Exit, Option, prompt
+from typer import Exit, Option, prompt, echo, progressbar
 
 from src import app
+from src.git_repo import GithubRepo
 from src.settings import NV_URL
 from src.request import APIRequest
 from src.response import APIResponse
 from src.enums import Genre
 from src.utils.echo import err_echo, success_echo
-
-
-@app.callback()
-def callback():
-    if not NV_URL:
-        err_echo(
-            "No environment variables. You should set environment variables first."
-        )
-        err_echo("Execute 'set-env' automatically.")
-        set_env()
-        raise Exit()
+from src.utils.random_ import rand_int, rand_word, rand_letter
 
 
 @app.command(help="Recommend a movie randomly")
@@ -29,16 +18,21 @@ def recommend(
     query: str = Option("", show_default=False),
     year_from: Union[None, int] = Option(None, show_default=False),
     year_to: Union[None, int] = Option(None, show_default=False),
+    post: bool = Option(False),
 ):
+    if not NV_URL:
+        err_echo("No environment variables.")
+        err_echo("You should set environment variables first or initialize for this.")
+        raise Exit()
     if genre and genre.upper() not in Genre.member_names():
         err_echo("Not supported genre.")
         raise Exit()
     try:
         api_result = APIRequest(
-            query=query or random.choice(list(string.ascii_lowercase)),
-            start=random.randrange(1, 1001),
+            query=query or rand_letter(),
+            start=rand_int(1, 1001),
             display=100,
-            genre=genre or random.choice(Genre.member_names()),
+            genre=genre or rand_word(Genre.member_names()),
             year_from=year_from,
             year_to=year_to,
         ).to_api()
@@ -54,6 +48,11 @@ def recommend(
 
     rcmd_movie = sorted(resp.items, key=lambda k: k.user_rating, reverse=True)[0]
     rcmd_movie.show()
+
+    if post:
+        gh_obj = GithubRepo()
+        gh_obj.create_issue(rcmd_movie, genre)
+        success_echo("* movie is posted successfully!")
 
 
 @app.command()
@@ -80,3 +79,21 @@ def set_env():
         env_file.write(f"GITHUB_REPO={github_repo}\n")
 
     success_echo("Setting Environment is completed successfully!")
+
+
+@app.command()
+def initialize():
+    """
+    Initialize for recommender.\n
+    Setting environments and create genre labels.
+    """
+    if not NV_URL:
+        echo("# Set environment for recommender...")
+        set_env()
+
+    echo("# Create labels of genre in repository...")
+    gh = GithubRepo()
+    with progressbar(Genre.member_names()) as genres:
+        for genre in genres:
+            gh.create_genre_labels(genre)
+    success_echo("Creating genre labels is done successfully!")
