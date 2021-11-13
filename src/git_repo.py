@@ -24,3 +24,6 @@ class GithubRepo:
 
     def create_genre_labels(self, genre):
         self._repo.create_label(name=genre, color=rand_color())
+
+    def get_labels(self):
+        return set(self._repo.get_labels())

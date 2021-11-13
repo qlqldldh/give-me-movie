@@ -3,8 +3,8 @@ from enum import auto, Enum
 
 class EnumClass(Enum):
     @classmethod
-    def member_names(cls) -> list:
-        return cls.__dict__.get("_member_names_")
+    def member_names(cls) -> set:
+        return set(cls.__dict__.get("_member_names_"))
 
     @classmethod
     def is_valid_value(cls, value: str) -> bool:

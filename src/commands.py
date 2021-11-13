@@ -1,6 +1,7 @@
 from typing import Union
 
 from typer import Exit, Option, prompt, echo, progressbar
+from github import GithubException
 
 from src import app
 from src.git_repo import GithubRepo
@@ -95,5 +96,8 @@ def initialize():
     gh = GithubRepo()
     with progressbar(Genre.member_names()) as genres:
         for genre in genres:
-            gh.create_genre_labels(genre)
+            try:
+                gh.create_genre_labels(genre)
+            except GithubException:
+                pass
     success_echo("Creating genre labels is done successfully!")
