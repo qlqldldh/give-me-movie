@@ -24,4 +24,5 @@ def remove_bold_exp(s: str):  # 망할 네이버..
 
 
 def replace_to_comma(s: str) -> str:  # 망할 네이버..
-    return s.replace("|", ",")[:-1]
+    s = s.replace("|", ",")
+    return s[:-1] if s[-1] == "," else s

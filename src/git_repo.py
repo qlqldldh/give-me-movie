@@ -1,4 +1,4 @@
-from github import Github
+from github import Github, GithubException
 
 from src.settings import GITHUB_ACCESS_TOKEN, GITHUB_REPO
 from src.utils.field import dict_without_none
@@ -22,8 +22,11 @@ class GithubRepo:
             title=item.title, body=item.markdown_text, labels=[label]
         )
 
-    def create_genre_labels(self, genre):
-        self._repo.create_label(name=genre, color=rand_color())
+    def create_genre_label(self, genre):
+        try:
+            self._repo.create_label(name=genre, color=rand_color())
+        except GithubException:
+            pass
 
     def get_labels(self):
         return set(self._repo.get_labels())

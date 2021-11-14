@@ -31,7 +31,7 @@ class APIRequest:
             )
         if genre and genre.upper() not in Genre.member_names():
             raise ValueError(f"Invalid 'genre' value")
-        if country and country not in Country.member_names():
+        if country and country.upper() not in Country.member_names():
             raise ValueError("Invalid 'country' value.")
 
         if (year_from is None and year_to is not None) or (
@@ -43,7 +43,7 @@ class APIRequest:
         self.display = display
         self.start = start
         self.genre = None if not genre else Genre[genre.upper()].value
-        self.country = None if not country else Country(country)
+        self.country = None if not country else Country[country.upper()].value
         self.yearfrom = year_from  # noqa
         self.yearto = year_to  # noqa
 

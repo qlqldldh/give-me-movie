@@ -1,16 +1,12 @@
 from typing import Union
 
 from typer import Exit, Option, prompt, echo, progressbar
-from github import GithubException
 
-from src import app
+from src import app, cmd_manager
 from src.git_repo import GithubRepo
 from src.settings import NV_URL
-from src.request import APIRequest
-from src.response import APIResponse
 from src.enums import Genre
 from src.utils.echo import err_echo, success_echo
-from src.utils.random_ import rand_int, rand_word, rand_letter
 
 
 @app.command(help="Recommend a movie randomly")
@@ -25,34 +21,19 @@ def recommend(
         err_echo("No environment variables.")
         err_echo("You should set environment variables first or initialize for this.")
         raise Exit()
-    if genre and genre.upper() not in Genre.member_names():
+    if genre and not Genre.is_valid_value(genre.upper()):
         err_echo("Not supported genre.")
         raise Exit()
     try:
-        api_result = APIRequest(
-            query=query or rand_letter(),
-            start=rand_int(1, 1001),
-            display=100,
-            genre=genre or rand_word(Genre.member_names()),
-            year_from=year_from,
-            year_to=year_to,
-        ).to_api()
+        movie = cmd_manager.recommend_movie(query, query, year_from, year_to)
+        movie.show()
     except Exception as e:
         err_echo(str(e))
         raise Exit()
 
-    resp = APIResponse.from_api(**api_result)
-
-    if not resp.items:
-        recommend(genre, query, year_from, year_to)
-        return
-
-    rcmd_movie = sorted(resp.items, key=lambda k: k.user_rating, reverse=True)[0]
-    rcmd_movie.show()
-
     if post:
         gh_obj = GithubRepo()
-        gh_obj.create_issue(rcmd_movie, genre)
+        gh_obj.create_issue(movie, genre)
         success_echo("* movie is posted successfully!")
 
 
@@ -72,12 +53,12 @@ def set_env():
     github_access_token = prompt("Github Acces Token: ")
     github_repo = prompt("Repository to issue: ")
 
-    with open(".env", "w") as env_file:
-        env_file.write(f"NV_URL=https://openapi.naver.com/v1/search/movie\n")
-        env_file.write(f"NV_CLIENT_ID={client_id}\n")
-        env_file.write(f"NV_CLIENT_SECRET={client_secret}\n")
-        env_file.write(f"GITHUB_ACCESS_TOKEN={github_access_token}\n")
-        env_file.write(f"GITHUB_REPO={github_repo}\n")
+    cmd_manager.reset_env(
+        client_id=client_id,
+        client_secret=client_secret,
+        github_access_token=github_access_token,
+        github_repo=github_repo,
+    )
 
     success_echo("Setting Environment is completed successfully!")
 
@@ -93,11 +74,6 @@ def initialize():
         set_env()
 
     echo("# Create labels of genre in repository...")
-    gh = GithubRepo()
     with progressbar(Genre.member_names()) as genres:
-        for genre in genres:
-            try:
-                gh.create_genre_labels(genre)
-            except GithubException:
-                pass
+        cmd_manager.set_genre_categories(genres)
     success_echo("Creating genre labels is done successfully!")

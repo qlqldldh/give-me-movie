@@ -8,8 +8,7 @@ class EnumClass(Enum):
 
     @classmethod
     def is_valid_value(cls, value: str) -> bool:
-        if isinstance(value, str):
-            return value in cls.member_names()
+        return value in cls.member_names()
 
 
 class Genre(EnumClass):
@@ -37,7 +36,7 @@ class Country(EnumClass):
     ETC = auto()
 
 
-class HttpStatus(Enum):
+class HttpStatus(EnumClass):
     OK = 200
     NOT_FOUND = 404
     BAD_REQUEST = 400

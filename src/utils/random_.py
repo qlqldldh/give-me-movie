@@ -6,8 +6,8 @@ def rand_int(start: int, end: int) -> int:
     return random.randrange(start, end)
 
 
-def rand_word(words: list) -> str:
-    return random.choice(words)
+def rand_word(words: set) -> str:
+    return random.choice(list(words))
 
 
 def rand_letter() -> str:
