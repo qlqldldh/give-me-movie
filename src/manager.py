@@ -19,7 +19,7 @@ class CommandManager:
     @staticmethod
     def reset_env(client_id, client_secret, github_access_token, github_repo):
         with open(".env", "w") as env_file:
-            env_file.write("NV_URL=https://openapi.naver.com/v1/search/movie")
+            env_file.write("NV_URL=https://openapi.naver.com/v1/search/movie\n")
             env_file.write(f"NV_CLIENT_ID={client_id}\n")
             env_file.write(f"NV_CLIENT_SECRET={client_secret}\n")
             env_file.write(f"GITHUB_ACCESS_TOKEN={github_access_token}\n")
