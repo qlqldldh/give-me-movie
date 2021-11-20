@@ -25,7 +25,7 @@ def recommend(
         err_echo("Not supported genre.")
         raise Exit()
     try:
-        movie = cmd_manager.recommend_movie(query, query, year_from, year_to)
+        movie = cmd_manager.recommend_movie(genre, query, year_from, year_to)
         movie.show()
     except Exception as e:
         err_echo(str(e))
