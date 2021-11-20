@@ -1,20 +1,12 @@
 import pytest
 
 from src.item import Item
+from tests.mocks.factories import ItemFactory
 
 
 @pytest.fixture
 def item(fake):
-    return Item(
-        title=fake.word(),
-        link=fake.domain_name(),
-        image=fake.domain_name(),
-        subtitle=fake.sentence(),
-        pub_date=str(fake.date_time()),
-        director=fake.name(),
-        actor=fake.name(),
-        user_rating=fake.pyfloat(right_digits=2, min_value=0, max_value=10),
-    )
+    return ItemFactory()
 
 
 def test_get_obj_should_return_item_instance(item):

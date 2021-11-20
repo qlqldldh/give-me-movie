@@ -37,7 +37,7 @@ class CommandManager:
 
         resp = APIResponse.from_api(**api_result)
         if not resp.items:
-            if self.recommend_count < self.RECOMMEND_LIMIT:
+            if self.recommend_count == self.RECOMMEND_LIMIT:
                 raise RuntimeError("There is no matched movie.")
             self.recommend_count += 1
             return self.get_movies(genre, query, year_from, year_to)
