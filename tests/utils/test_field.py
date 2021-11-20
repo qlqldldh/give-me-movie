@@ -47,8 +47,8 @@ def test_dict_without_none():
     assert dict_without_none(obj) == expected
 
 
-def test_remove_bold_exp():
-    expected = Faker().word()
+def test_remove_bold_exp(fake):
+    expected = fake.word()
     s = f"<b>{expected}</b>"
     assert remove_bold_exp(s) == expected
 

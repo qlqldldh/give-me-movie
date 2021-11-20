@@ -1,10 +1,7 @@
-from faker import Faker
-
 from src.response import APIResponse
 
 
-def test_from_api_should_return_response_instance():
-    fake = Faker()
+def test_from_api_should_return_response_instance(fake):
     kwargs = {
         "last_build_date": str(fake.date_time()),
         "total": fake.pyint(),

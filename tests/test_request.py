@@ -10,8 +10,7 @@ from tests.mocks.err_response import MockErrResp
 
 
 @pytest.fixture
-def api_req_kwargs():
-    fake = Faker()
+def api_req_kwargs(fake):
     return {
         "query": fake.word(ext_word_list=list(ascii_letters)),
         "display": fake.pyint(),
@@ -31,8 +30,7 @@ def mocked_err_response(request):
 
 
 @pytest.fixture
-def invalid_genre():
-    fake = Faker()
+def invalid_genre(fake):
     genre = fake.word()
     while genre.upper() in Genre.member_names():
         genre = fake.word()
@@ -47,9 +45,9 @@ def invalid_genre():
         "display",  # string
     ],
 )
-def test_init_with_not_int_display_should_raise_exception(invalid_display):
+def test_init_with_not_int_display_should_raise_exception(fake, invalid_display):
     with pytest.raises(ValueError):
-        APIRequest(Faker().word(), invalid_display)
+        APIRequest(fake.word(), invalid_display)
 
 
 @pytest.mark.parametrize(
@@ -59,21 +57,20 @@ def test_init_with_not_int_display_should_raise_exception(invalid_display):
         "start",  # string
     ],
 )
-def test_init_with_not_int_start_should_raise_exception(invalid_start):
-    fake = Faker()
+def test_init_with_not_int_start_should_raise_exception(fake, invalid_start):
     with pytest.raises(ValueError):
         APIRequest(fake.word(), fake.pyint(), invalid_start)
 
 
-def test_init_with_invalid_genre_should_raise_exception(invalid_genre):
+def test_init_with_invalid_genre_should_raise_exception(fake, invalid_genre):
     with pytest.raises(ValueError):
-        APIRequest(query=Faker().word(), genre=invalid_genre)
+        APIRequest(query=fake.word(), genre=invalid_genre)
 
 
-def test_inti_with_invalid_country_should_raise_exception():
-    invalid_country = Faker().word()
+def test_inti_with_invalid_country_should_raise_exception(fake):
+    invalid_country = fake.word()
     with pytest.raises(ValueError):
-        APIRequest(query=Faker().word(), country=invalid_country)
+        APIRequest(query=fake.word(), country=invalid_country)
 
 
 @pytest.mark.parametrize(
@@ -83,9 +80,11 @@ def test_inti_with_invalid_country_should_raise_exception():
         (None, str(Faker().date_time())),  # year_from is None, year_to is not None
     ],
 )
-def test_init_with_invalid_year_from_year_to_should_raise_exception(year_from, year_to):
+def test_init_with_invalid_year_from_year_to_should_raise_exception(
+    fake, year_from, year_to
+):
     with pytest.raises(ValueError):
-        APIRequest(query=Faker().word(), year_from=year_from, year_to=year_to)
+        APIRequest(query=fake.word(), year_from=year_from, year_to=year_to)
 
 
 @pytest.mark.parametrize(

@@ -1,8 +1,6 @@
 import json
 from faker import Faker
 
-fake = Faker()
-
 
 class MockErrResp:
     def __init__(self, status_code):
@@ -10,7 +8,7 @@ class MockErrResp:
 
     @property
     def content(self):
-        return json.dumps({"errMessage": fake.sentence()})
+        return json.dumps({"errMessage": Faker().sentence()})
 
     @property
     def status_code(self):

@@ -1,12 +1,10 @@
 import pytest
-from faker import Faker
 
 from src.item import Item
 
 
 @pytest.fixture
-def item():
-    fake = Faker()
+def item(fake):
     return Item(
         title=fake.word(),
         link=fake.domain_name(),
