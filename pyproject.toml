@@ -10,6 +10,7 @@ PyGithub = "^1.55"
 python-dotenv = "^0.19.1"
 typer = "^0.4.0"
 Markdown = "^3.3.4"
+bottle = "^0.12.19"
 
 [tool.poetry.dev-dependencies]
 ipython = "^7.28.0"
