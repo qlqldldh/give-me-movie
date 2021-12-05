@@ -1,9 +1,11 @@
 import json
+
+from bottle import HTTPError
+
 from src.enums import Genre, HttpStatus
 from src.git_repo import GithubRepo
 from src.request import APIRequest
 from src.response import APIResponse
-from src.errors import HTTPNotFoundError, HTTPBadRequestError
 from src.utils.random_ import rand_letter, rand_int, rand_word
 
 
@@ -28,13 +30,15 @@ class MovieRecommender:
                 year_from=year_from,
                 year_to=year_to,
             ).to_api()
-        except Exception as e:
-            raise HTTPBadRequestError(str(e))
+        except ValueError as e:
+            raise HTTPError(status=HttpStatus.BAD_REQUEST.value, body=str(e))
 
         content = json.loads(api_resp.content)
 
-        if api_resp.status_code == HttpStatus.NOT_FOUND.value:
-            raise HTTPNotFoundError(content.get("errorMessage"))
+        if api_resp.status_code != HttpStatus.OK.value:
+            raise HTTPError(
+                status=api_resp.status_code, body=content.get("errorMessage")
+            )
 
         resp_obj = APIResponse.from_api(**content)
         if not resp_obj.items:
