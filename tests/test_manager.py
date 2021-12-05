@@ -4,14 +4,14 @@ import pytest
 from src.item import Item
 from tests.mocks.factories import ItemFactory
 
-from src.manager import CommandManager
+from src.manager import MovieRecommender
 from src.enums import Genre
 from src.utils.random_ import rand_letter
 
 
 @pytest.fixture
 def cmd_manager():
-    return CommandManager()
+    return MovieRecommender()
 
 
 @pytest.fixture
