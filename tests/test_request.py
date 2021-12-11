@@ -47,7 +47,7 @@ def invalid_genre(fake):
 )
 def test_init_with_not_int_display_should_raise_exception(fake, invalid_display):
     with pytest.raises(ValueError):
-        APIRequest(fake.word(), invalid_display)
+        APIRequest(fake.word(), invalid_display)  # noqa
 
 
 @pytest.mark.parametrize(
@@ -59,7 +59,7 @@ def test_init_with_not_int_display_should_raise_exception(fake, invalid_display)
 )
 def test_init_with_not_int_start_should_raise_exception(fake, invalid_start):
     with pytest.raises(ValueError):
-        APIRequest(fake.word(), fake.pyint(), invalid_start)
+        APIRequest(fake.word(), fake.pyint(), invalid_start)  # noqa
 
 
 def test_init_with_invalid_genre_should_raise_exception(fake, invalid_genre):
@@ -102,12 +102,3 @@ def test_to_dict_should_return_dict_without_none_value(api_req_kwargs, field):
     result = req.to_dict()
 
     assert result.get(field) is None
-
-
-def test_to_api_without_ok_http_status_should_raise_exception(
-    mocker, mocked_err_response, api_req_kwargs
-):
-    mocker.patch("requests.get", return_value=mocked_err_response)
-    req = APIRequest(**api_req_kwargs)
-    with pytest.raises(HTTPError):
-        req.to_api()
