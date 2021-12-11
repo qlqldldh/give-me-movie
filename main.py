@@ -1,7 +1,7 @@
 from bottle import run
 
 from src.views import app as movie_app
-from src.settings import SERVER_HOST, SERVER_PORT
+from src.settings import SERVER_HOST, SERVER_PORT, DEBUG
 
 
 if __name__ == "__main__":
@@ -9,5 +9,5 @@ if __name__ == "__main__":
         app=movie_app,
         host=SERVER_HOST,
         port=SERVER_PORT,
-        debug=False,
+        debug=DEBUG,
     )

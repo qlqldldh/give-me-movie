@@ -5,6 +5,7 @@ from bottle import HTTPError
 from src.enums import HttpStatus
 from src.request import APIRequest
 from src.response import APIResponse
+from src.item import Item
 from src.utils.random_ import rand_int
 
 
@@ -14,7 +15,7 @@ class MovieRecommender:
     def __init__(self):
         self.__request_count = 0
 
-    def get_movies(self, **kwargs):
+    def get_movies(self, **kwargs) -> list[dict]:
         start = rand_int(1, 1000)
         display = 100
         resp = self._get_resp_from_api(start=start, display=display, **kwargs)
@@ -29,12 +30,12 @@ class MovieRecommender:
 
         return sorted(resp.items, key=lambda k: k.user_rating, reverse=True)
 
-    def recommend_movie(self, **kwargs):
+    def recommend_movie(self, **kwargs) -> Item:
         movies = self.get_movies(**kwargs)
         return movies[0]  # TODO: apply recommendation algorithm
 
     @staticmethod
-    def _get_resp_from_api(**kwargs):
+    def _get_resp_from_api(**kwargs) -> APIResponse:
         try:
             api_resp = APIRequest(**kwargs).to_api()
         except Exception as e:

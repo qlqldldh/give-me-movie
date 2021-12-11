@@ -1,5 +1,5 @@
 from src.base import JsonBottle
-from src.manager import MovieRecommender
+from src.recommender import MovieRecommender
 
 
 app = JsonBottle()

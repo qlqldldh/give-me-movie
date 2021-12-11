@@ -1,5 +1,4 @@
 import pytest
-from requests import HTTPError
 from faker import Faker
 from string import ascii_letters
 

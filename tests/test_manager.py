@@ -6,7 +6,7 @@ from src.item import Item
 from src.response import APIResponse
 from tests.mocks.factories import ItemFactory
 
-from src.manager import MovieRecommender
+from src.recommender import MovieRecommender
 from src.enums import Genre
 from src.utils.random_ import rand_letter
 
@@ -53,7 +53,7 @@ def test_get_movies_should_raise_exception_when_no_movie_found(
     fake, mocker, cmd_manager, api_result
 ):
     mocker.patch(
-        "src.manager.MovieRecommender._get_resp_from_api",
+        "src.recommender.MovieRecommender._get_resp_from_api",
         return_value=APIResponse(**api_result),
     )
     with pytest.raises(HTTPError):
@@ -76,7 +76,7 @@ def test_get_movies_should_return_rate_sorted_movies(
     mocker, fake, cmd_manager, api_result
 ):
     mocker.patch(
-        "src.manager.MovieRecommender._get_resp_from_api",
+        "src.recommender.MovieRecommender._get_resp_from_api",
         return_value=APIResponse(**api_result),
     )
     movies = cmd_manager.get_movies(
@@ -105,7 +105,7 @@ def test_recommend_movie_should_return_item_instance(
     mocker, fake, cmd_manager, api_result
 ):
     mocker.patch(
-        "src.manager.MovieRecommender._get_resp_from_api",
+        "src.recommender.MovieRecommender._get_resp_from_api",
         return_value=APIResponse(**api_result),
     )
     movie = cmd_manager.recommend_movie(

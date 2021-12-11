@@ -5,6 +5,7 @@
 ## Requirements
 - Poetry
 - Python 3.9
+> you also need client id and secret key from Naver Development Center
 
 ## Installation
 - __Poetry__<br>
