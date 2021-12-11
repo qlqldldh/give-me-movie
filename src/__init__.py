@@ -1,5 +1,6 @@
-import typer
-from src.manager import CommandManager
+from src.base import JsonBottle
+from src.recommender import MovieRecommender
 
-app = typer.Typer()
-cmd_manager = CommandManager()
+
+app = JsonBottle()
+movie_recommender = MovieRecommender()

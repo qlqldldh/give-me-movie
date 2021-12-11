@@ -1,0 +1,12 @@
+{
+  "dev": {
+    "app_function": "main.movie_app",
+    "aws_region": "ap-northeast-2",
+    "profile_name": "default",
+    "project_name": "give-me-movie",
+    "runtime": "python3.9",
+    "s3_bucket": "zappa-give-me-movie",
+    "base_path": "",
+    "slim_handler": false
+  }
+}

@@ -1,17 +1,19 @@
 from uuid import uuid4
 import pytest
+from bottle import HTTPError
 
 from src.item import Item
+from src.response import APIResponse
 from tests.mocks.factories import ItemFactory
 
-from src.manager import CommandManager
+from src.recommender import MovieRecommender
 from src.enums import Genre
 from src.utils.random_ import rand_letter
 
 
 @pytest.fixture
 def cmd_manager():
-    return CommandManager()
+    return MovieRecommender()
 
 
 @pytest.fixture
@@ -46,24 +48,15 @@ def api_result(fake, request):
     }
 
 
-def test_reset_env_should_write_env_file(
-    mocker, cmd_manager, env_vars, env_vars_content
-):
-    mocker.patch("builtins.open", mocker.mock_open(read_data=env_vars_content))
-    cmd_manager.reset_env(**env_vars)
-
-    with open(".env", "r") as env_file:
-        assert "NV_URL" in env_file.readline()
-        for env_info in env_vars.values():
-            assert env_info in env_file.readline()
-
-
 @pytest.mark.parametrize("api_result", [list()], indirect=True)
 def test_get_movies_should_raise_exception_when_no_movie_found(
     fake, mocker, cmd_manager, api_result
 ):
-    mocker.patch("src.request.APIRequest.to_api", return_value=api_result)
-    with pytest.raises(RuntimeError):
+    mocker.patch(
+        "src.recommender.MovieRecommender._get_resp_from_api",
+        return_value=APIResponse(**api_result),
+    )
+    with pytest.raises(HTTPError):
         cmd_manager.get_movies(
             genre=fake.word(ext_word_list=Genre.member_names()),
             query=rand_letter(),
@@ -82,7 +75,10 @@ def test_get_movies_should_raise_exception_when_no_movie_found(
 def test_get_movies_should_return_rate_sorted_movies(
     mocker, fake, cmd_manager, api_result
 ):
-    mocker.patch("src.request.APIRequest.to_api", return_value=api_result)
+    mocker.patch(
+        "src.recommender.MovieRecommender._get_resp_from_api",
+        return_value=APIResponse(**api_result),
+    )
     movies = cmd_manager.get_movies(
         genre=fake.word(ext_word_list=Genre.member_names()),
         query=rand_letter(),
@@ -108,7 +104,10 @@ def test_get_movies_should_return_rate_sorted_movies(
 def test_recommend_movie_should_return_item_instance(
     mocker, fake, cmd_manager, api_result
 ):
-    mocker.patch("src.request.APIRequest.to_api", return_value=api_result)
+    mocker.patch(
+        "src.recommender.MovieRecommender._get_resp_from_api",
+        return_value=APIResponse(**api_result),
+    )
     movie = cmd_manager.recommend_movie(
         genre=fake.word(ext_word_list=Genre.member_names()),
         query=rand_letter(),

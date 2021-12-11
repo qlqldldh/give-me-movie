@@ -1,8 +1,7 @@
 import requests
-import json
 
 from src.settings import NV_URL, NV_CLIENT_ID, NV_CLIENT_SECRET
-from src.enums import Genre, Country, HttpStatus
+from src.enums import Genre, Country
 from src.utils.field import is_none_or_type, dict_without_none
 
 
@@ -30,7 +29,7 @@ class APIRequest:
                 "Invalid 'start' value. 'start' should be integer and in range of 1 to 1000"
             )
         if genre and genre.upper() not in Genre.member_names():
-            raise ValueError(f"Invalid 'genre' value")
+            raise ValueError("Not supported genre.")
         if country and country.upper() not in Country.member_names():
             raise ValueError("Invalid 'country' value.")
 
@@ -50,14 +49,10 @@ class APIRequest:
     def to_dict(self) -> dict:
         return dict_without_none(self.__dict__)
 
-    def to_api(self) -> dict:
+    def to_api(self):
         headers = {
             "X-Naver-Client-Id": self.CLIENT_ID,
             "X-Naver-Client-Secret": self.CLIENT_SECRET,
         }
         resp = requests.get(self.URL, headers=headers, params=self.to_dict())
-        result = json.loads(resp.content)
-        if resp.status_code != HttpStatus.OK.value:
-            raise requests.HTTPError(result.get("errorMessage"))
-
-        return result
+        return resp
